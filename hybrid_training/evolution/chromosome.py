@@ -11,9 +11,11 @@ class Chromosome:
         self._model = None
         self.weights = None
 
-    def generate(self) -> None:
+    def generate(self, zero_weights_ratio: int = 0.5) -> None:
         self._generate_model()
         self.weights = self._model.get_weights()
+        if zero_weights_ratio > 0:
+            self._zero_some_weights(zero_weights_ratio)
 
     def apply_weights_to_model(self) -> None:
         self._model.set_weights(self.weights)
@@ -84,3 +86,42 @@ class Chromosome:
 
     def get_model(self) -> ModelBaseInterface:
         return self._model
+
+    def _zero_some_weights(self, zero_weights_ratio: float) -> list[np.ndarray]:
+        for array_index, array in self.weights.items():
+            array["weight"] = self._zero_some_weights_in_array(
+                array["weight"], zero_weights_ratio,
+            )
+
+            if "bias" in array.keys():
+                array["bias"] = self._zero_some_weights_in_array(
+                    array["bias"], zero_weights_ratio
+                )
+
+    @staticmethod
+    def _zero_some_weights_in_array(
+        array: np.ndarray, ratio: float
+    ) -> np.ndarray:
+        if array.ndim == 1:
+            for i in range(len(array)):
+                random_float = np.random.uniform(0, 1)
+                if random_float < ratio:
+                    array[i] = 0
+
+        if array.ndim == 2:
+            for i in range(array.shape[0]):
+                for j in range(array.shape[1]):
+                    random_float = np.random.uniform(0, 1)
+                    if random_float < ratio:
+                        array[i, j] = 0
+
+        if array.ndim == 4:
+            for i in range(array.shape[0]):
+                for j in range(array.shape[1]):
+                    for k in range(array.shape[2]):
+                        for l in range(array.shape[3]):
+                            random_float = np.random.uniform(0, 1)
+                            if random_float < ratio:
+                                array[i, j, k, l] = 0
+
+        return array

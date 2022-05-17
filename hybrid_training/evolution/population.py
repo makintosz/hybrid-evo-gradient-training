@@ -18,7 +18,7 @@ class Population:
     def generate(self) -> None:
         for chromosome_index in range(self._settings["population_size"]):
             chromosome = Chromosome(self._settings)
-            chromosome.generate()
+            chromosome.generate(zero_weights_ratio=0.3)
             self._chromosomes.append(chromosome)
 
     def calculate_fitness(self, fitness: FitnessFunctionBase) -> None:
