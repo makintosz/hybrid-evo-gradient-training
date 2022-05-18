@@ -2,7 +2,7 @@
 A novel method of training deep neural networks using both 
 evolutionary and traditional approach based on gradient descent.
 The idea of this repository is to create a hybrid system for 
-training deep learning networks that not only traines
+training deep learning networks that not only trains
 weights of the model but also its architecture (thanks to evolutionary part). 
 
 After evolutionary operators are finished with their transformations
@@ -12,5 +12,6 @@ one epoch training on the chromosomes weights.
 Chromosomes store weights of each layer of the network
 with previously defined settings.
 Architecture is shaped by using 0 weights values in some 
-share of networks connections (0.5 by default). 
-Such zeros are not changed during mutation or gradient descent step.
+share of network's connections (0.5 by default). 
+Such zeros are not changed during mutation or gradient descent step, they can 
+only be crossovered between different chromosomes.
