@@ -7,3 +7,7 @@ class FitnessFunctionBase(ABC):
     @abstractmethod
     def calculate_for_population(self, chromosomes: list[Chromosome]) -> list[float]:
         pass
+
+    @abstractmethod
+    def get_metrics(self) -> dict:
+        pass

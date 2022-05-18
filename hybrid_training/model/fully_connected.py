@@ -8,14 +8,14 @@ from hybrid_training.model.model_base import ModelBaseInterface
 
 
 class FullyConnectedModel(ModelBaseInterface):
-    def __init__(self, settings: dict):
+    def __init__(self, settings: dict) -> None:
         self.settings = settings
         self.network = FullyConnectedArchitecture(settings)
 
-    def predict(self, x) -> int:
+    def predict(self, x: np.ndarray) -> int:
         x = x.astype(np.float32)
         x = torch.from_numpy(x)
-        return self.network(x.view(-1, 1, self.settings["input_features"]))
+        return self.network(x.view(-1, 1, self.settings[0]["neurons_in"]))
 
     def get_weights(self) -> dict[int, dict[str, np.ndarray]]:
         layers_weights = {}
@@ -56,7 +56,7 @@ class FullyConnectedModel(ModelBaseInterface):
 
 
 class FullyConnectedArchitecture(nn.Module):
-    def __init__(self, settings: dict):
+    def __init__(self, settings: dict) -> None:
         super().__init__()
 
         self.layers = nn.Sequential(*self._create_architecture(settings))
