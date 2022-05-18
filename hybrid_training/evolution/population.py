@@ -27,6 +27,7 @@ class Population:
     def select_chromosomes(self) -> None:
         fitness_scaler = MinMaxScaler()
         fitness_population = np.array(self._fitness)
+        fitness_population = np.divide(1, fitness_population)
         fitness_population = (
             fitness_scaler.fit_transform(fitness_population.reshape((-1, 1)))
             .flatten()
@@ -69,15 +70,13 @@ class Population:
             del to_cross[-1]
 
         np.random.shuffle(to_cross)
-        print(len(to_cross))
         for pdx in range(0, len(to_cross), 2):
-            print(pdx)
             (
-                self._chromosomes[to_cross[pdx]],
-                self._chromosomes[to_cross[pdx + 1]],
+                self._chromosomes_new[to_cross[pdx]],
+                self._chromosomes_new[to_cross[pdx + 1]],
             ) = self._chromosomes_crossover(
-                self._chromosomes[to_cross[pdx]],
-                self._chromosomes[to_cross[pdx + 1]],
+                self._chromosomes_new[to_cross[pdx]],
+                self._chromosomes_new[to_cross[pdx + 1]],
             )
 
     def _chromosomes_crossover(
@@ -145,6 +144,10 @@ class Population:
                                 array2[i, j, k, l] = weight_temp_c1
 
         return array1, array2
+
+    def apply_new_generation(self) -> None:
+        self._chromosomes = self._chromosomes_new
+        self._chromosomes_new = []
 
     @staticmethod
     def _is_even(seq: list) -> int:

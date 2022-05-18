@@ -1,8 +1,12 @@
-from hybrid_training.evolution.population import Population
+from sklearn.datasets import make_regression
+import matplotlib.pyplot as plt
+
+from hybrid_training.evolution.evolve import evolve
+from fitness_function.mse_fitness_example import FitnessMSE
 
 
 architecture = {
-    0: {"type": "fc", "neurons_in": 3, "neurons_out": 16, "bias": True},
+    0: {"type": "fc", "neurons_in": 12, "neurons_out": 16, "bias": True},
     1: {"type": "relu"},
     2: {"type": "bn"},
     3: {"type": "fc", "neurons_in": 16, "neurons_out": 8, "bias": True},
@@ -17,15 +21,21 @@ architecture = {
 model_settings = {
     "model_type": "fully_connected",
     "architecture": architecture,
-    "population_size": 20,
-    "mutation_chromosome_probability": 0.3,
-    "mutation_gene_probability": 0.2,
+    "generations_number": 1500,
+    "population_size": 50,
+    "input_features": 12,
+    "mutation_chromosome_probability": 0.2,
+    "mutation_gene_probability": 0.01,
     "gene_mutation_range": 0.1,
     "crossover_chromosome_probability": 0.25,
     "crossover_gene_probability": 0.5,
 }
 
-pop = Population(model_settings)
-pop.generate()
-pop.mutate_population()
-pop.crossover_population()
+x, y = make_regression(n_samples=1000, n_features=12)
+
+fitness_function = FitnessMSE(x, y)
+
+history = evolve(model_settings, fitness_function)
+print(history)
+plt.plot(history["rmse"])
+plt.show()

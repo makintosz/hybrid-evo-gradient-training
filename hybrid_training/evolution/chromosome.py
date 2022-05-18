@@ -77,8 +77,8 @@ class Chromosome:
 
         return array
 
-    def predict(self, x: np.ndarray) -> int:
-        return self._model.predict(x)
+    def predict(self, x: np.ndarray) -> np.ndarray:
+        return self._model.predict(x).detach().numpy()
 
     def _generate_model(self) -> None:
         if self._model_settings["model_type"] == "fully_connected":
@@ -90,7 +90,8 @@ class Chromosome:
     def _zero_some_weights(self, zero_weights_ratio: float) -> list[np.ndarray]:
         for array_index, array in self.weights.items():
             array["weight"] = self._zero_some_weights_in_array(
-                array["weight"], zero_weights_ratio,
+                array["weight"],
+                zero_weights_ratio,
             )
 
             if "bias" in array.keys():
@@ -99,9 +100,7 @@ class Chromosome:
                 )
 
     @staticmethod
-    def _zero_some_weights_in_array(
-        array: np.ndarray, ratio: float
-    ) -> np.ndarray:
+    def _zero_some_weights_in_array(array: np.ndarray, ratio: float) -> np.ndarray:
         if array.ndim == 1:
             for i in range(len(array)):
                 random_float = np.random.uniform(0, 1)
