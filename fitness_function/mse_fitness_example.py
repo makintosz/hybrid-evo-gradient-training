@@ -2,8 +2,8 @@ import numpy as np
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
-from hybrid_training.fitness_base import FitnessFunctionBase
 from hybrid_training.evolution.chromosome import Chromosome
+from hybrid_training.fitness_base import FitnessFunctionBase
 
 
 class FitnessMSE(FitnessFunctionBase):

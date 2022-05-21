@@ -15,10 +15,10 @@ class Population:
         self._chromosomes_new = []
         self._fitness = []
 
-    def generate(self) -> None:
+    def generate(self, x: np.ndarray, y: np.ndarray) -> None:
         for chromosome_index in range(self._settings["population_size"]):
             chromosome = Chromosome(self._settings)
-            chromosome.generate(zero_weights_ratio=0.3)
+            chromosome.generate(x, y, zero_weights_ratio=0.3)
             self._chromosomes.append(chromosome)
 
     def calculate_fitness(self, fitness: FitnessFunctionBase) -> None:
@@ -144,6 +144,11 @@ class Population:
                                 array2[i, j, k, l] = weight_temp_c1
 
         return array1, array2
+
+    def conduct_gradient_step(self) -> None:
+        for chromosome in self._chromosomes_new:
+            chromosome.apply_weights_to_model()
+            chromosome.train_one_iteration()
 
     def apply_new_generation(self) -> None:
         self._chromosomes = self._chromosomes_new

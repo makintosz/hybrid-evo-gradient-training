@@ -1,7 +1,14 @@
-import numpy as np
+import random
 
-from hybrid_training.model.model_base import ModelBaseInterface
+import numpy as np
+import torch
+
 from hybrid_training.model.fully_connected import FullyConnectedModel
+from hybrid_training.model.model_base import ModelBaseInterface
+
+random.seed(0)
+np.random.seed(0)
+torch.manual_seed(0)
 
 
 class Chromosome:
@@ -11,8 +18,10 @@ class Chromosome:
         self._model = None
         self.weights = None
 
-    def generate(self, zero_weights_ratio: int = 0.5) -> None:
-        self._generate_model()
+    def generate(
+        self, x: np.ndarray, y: np.ndarray, zero_weights_ratio: int = 0.5
+    ) -> None:
+        self._generate_model(x, y)
         self.weights = self._model.get_weights()
         if zero_weights_ratio > 0:
             self._zero_some_weights(zero_weights_ratio)
@@ -80,12 +89,15 @@ class Chromosome:
     def predict(self, x: np.ndarray) -> np.ndarray:
         return self._model.predict(x).detach().numpy()
 
-    def _generate_model(self) -> None:
+    def _generate_model(self, x: np.ndarray, y: np.ndarray) -> None:
         if self._model_settings["model_type"] == "fully_connected":
-            self._model = FullyConnectedModel(self._model_settings["architecture"])
+            self._model = FullyConnectedModel(self._model_settings, x, y)
 
     def get_model(self) -> ModelBaseInterface:
         return self._model
+
+    def train_one_iteration(self) -> None:
+        self._model.train_one_iteration()
 
     def _zero_some_weights(self, zero_weights_ratio: float) -> list[np.ndarray]:
         for array_index, array in self.weights.items():
