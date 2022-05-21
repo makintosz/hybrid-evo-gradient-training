@@ -1,5 +1,4 @@
 import os
-import random
 
 import numpy as np
 import torch
@@ -9,10 +8,6 @@ from torch.utils.data import DataLoader
 
 from hybrid_training.data_processing.datasets import TabularDataset
 from hybrid_training.model.model_base import ModelBaseInterface
-
-random.seed(0)
-np.random.seed(0)
-torch.manual_seed(0)
 
 
 class FullyConnectedModel(ModelBaseInterface):
@@ -75,6 +70,7 @@ class FullyConnectedModel(ModelBaseInterface):
             loss = self._loss(output.view(-1, 1), y_batch)
             loss.backward()
             self._optimizer.step()
+            break
 
     def save_model(self) -> None:
         torch.save(self._network, os.path.join("results", "fc_model.pt"))

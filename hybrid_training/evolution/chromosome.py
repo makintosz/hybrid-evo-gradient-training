@@ -1,14 +1,7 @@
-import random
-
 import numpy as np
-import torch
 
 from hybrid_training.model.fully_connected import FullyConnectedModel
 from hybrid_training.model.model_base import ModelBaseInterface
-
-random.seed(0)
-np.random.seed(0)
-torch.manual_seed(0)
 
 
 class Chromosome:

@@ -1,0 +1,2 @@
+REPRODUCIBLE = True
+DEVICE = "cpu"
