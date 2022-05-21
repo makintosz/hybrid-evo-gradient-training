@@ -23,3 +23,7 @@ class ModelBaseInterface(ABC):
     @abstractmethod
     def load_model(self) -> None:
         pass
+
+    @abstractmethod
+    def train_one_iteration(self) -> None:
+        pass
