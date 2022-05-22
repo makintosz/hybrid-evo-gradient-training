@@ -90,7 +90,28 @@ class Chromosome:
         return self._model
 
     def train_one_iteration(self) -> None:
+        zero_weights_masks = self._find_zero_values()
         self._model.train_one_iteration()
+        self._set_zero_values(zero_weights_masks)
+
+    def _find_zero_values(self) -> dict:
+        zero_weights = {}
+        for layer_index in self.weights:
+            zero_weights[layer_index] = {
+                "weight": self.weights[layer_index]["weight"] == 0
+            }
+            if "bias" in self.weights[layer_index].keys():
+                zero_weights[layer_index]["bias"] = (
+                    self.weights[layer_index]["bias"] == 0
+                )
+
+        return zero_weights
+
+    def _set_zero_values(self, zero_weights: dict) -> None:
+        for layer_index in zero_weights:
+            self.weights[layer_index]["weight"][zero_weights[layer_index]["weight"]] = 0
+            if "bias" in zero_weights[layer_index].keys():
+                self.weights[layer_index]["bias"][zero_weights[layer_index]["bias"]] = 0
 
     def _zero_some_weights(self, zero_weights_ratio: float) -> list[np.ndarray]:
         for array_index, array in self.weights.items():
