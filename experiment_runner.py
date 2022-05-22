@@ -29,7 +29,7 @@ model_settings = {
     "architecture": architecture,
     "learning_rate": 0.0001,
     "batch_size": 32,
-    "generations_number": 2500,
+    "generations_number": 100,
     "population_size": 30,
     "input_features": 12,
     "mutation_chromosome_probability": 0.2,
